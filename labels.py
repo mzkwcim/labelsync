@@ -139,7 +139,7 @@ def create_labels_from_toml(file_path, repo, dry_run=False):
 
 def confirm_operation(repo, file_path):
     """
-    Prompt the user before executing the GitHub CLI command for modifying labels.
+    Prompts the user before executing the GitHub CLI command for modifying labels.
 
     Args:
         repo (str): GitHub repository name in owner/repo format.

@@ -25,7 +25,7 @@ logger.add(
 
 def _handle_exception(exc_type, exc_value, exc_traceback):
     """
-    Handles uncaught exceptions registered via sys.excepthook and logs them using loguru.
+    Handles uncaught exceptions as a sys.excepthook handler and logs them using loguru.
     """
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
