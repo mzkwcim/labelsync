@@ -33,12 +33,9 @@ def run_gh_command(cmd, repo, dry_run=False):
     Executes a GitHub CLI command.
 
     Args:
-        cmd (list): Base gh CLI command, e.g. ['label', 'list']
-        repo (str): GitHub repository in the form owner/repo
-        dry_run (bool): If True, only prints the command
-
-    Returns:
-        str | None: Command output or None on failure
+        cmd (list): Base GitHub CLI command, e.g. ['label', 'list'].
+        repo (str): GitHub repository name in owner/repo format.
+        dry_run (bool): If True, runs the function in simulation mode.
     """
     full_cmd = ["gh"] + cmd + ["--repo", repo]
     if dry_run:
@@ -56,11 +53,11 @@ def run_gh_command(cmd, repo, dry_run=False):
 
 def backup_labels(repo, dry_run=False):
     """
-    Creates a TOML backup of the current label state.
+    Creates a TOML file backup of the current labels in the specified GitHub repository.
 
     Args:
-        repo (str): GitHub repository
-        dry_run (bool): If True, skip execution
+        repo (str): GitHub repository name in owner/repo format.
+        dry_run (bool): If True, runs the function in simulation mode.
     """
     if dry_run:
         logger.info("[DRY-RUN] Skipping label backup.")
@@ -95,11 +92,11 @@ def backup_labels(repo, dry_run=False):
 
 def delete_all_labels(repo, dry_run=False):
     """
-    Deletes all labels in the GitHub repository.
+    Deletes all labels in the specified repository.
 
     Args:
-        repo (str): GitHub repository
-        dry_run (bool): If True, simulate only
+        repo (str): GitHub repository name in owner/repo format.
+        dry_run (bool): If True, runs the function in simulation mode.
     """
     logger.info(f"🗑️  Fetching existing labels from {repo}...")
     output = run_gh_command(["label", "list"], repo, dry_run)
@@ -115,12 +112,12 @@ def delete_all_labels(repo, dry_run=False):
 
 def create_labels_from_toml(file_path, repo, dry_run=False):
     """
-    Reads TOML file and creates all defined labels.
+    Reads a TOML labels configuration file and uses the GitHub CLI to create labels in the specified repository.
 
     Args:
-        file_path (str): Path to label definition file
-        repo (str): GitHub repository
-        dry_run (bool): If True, simulate only
+        file_path (str): TOML file path containing label definitions, which can be relative or absolute.
+        repo (str): GitHub repository name in owner/repo format.
+        dry_run (bool): If True, runs the function in simulation mode.
     """
     logger.info(f"📄 Reading labels from: {file_path}")
     with open(file_path, "rb") as f:
@@ -142,14 +139,14 @@ def create_labels_from_toml(file_path, repo, dry_run=False):
 
 def confirm_operation(repo, file_path):
     """
-    Asks user to confirm potentially destructive changes.
+    Prompt the user before executing the GitHub CLI command for modifying labels.
 
     Args:
-        repo (str): GitHub repository
-        file_path (str): TOML label file
+        repo (str): GitHub repository name in owner/repo format.
+        file_path (str): TOML file path containing label definitions, which can be relative or absolute.
 
     Returns:
-        bool: True if user confirms
+        bool: Whether the user confirms the action.
     """
     logger.warning(f"You are about to modify labels in: {repo}")
     logger.info(f"Using label definitions from: {file_path}")
@@ -158,6 +155,12 @@ def confirm_operation(repo, file_path):
 
 
 def main():
+    """
+    CLI entry point for synchronizing GitHub labels from a TOML file.
+
+    Parses command-line arguments, configures logging and applies label changes
+    to the specified repository.
+    """
     parser = argparse.ArgumentParser(description="Sync GitHub labels from a TOML file.")
 
     parser.add_argument(

@@ -25,7 +25,7 @@ logger.add(
 
 def _handle_exception(exc_type, exc_value, exc_traceback):
     """
-    Handles uncaught exceptions globally and logs them using loguru.
+    Handles uncaught exceptions registered via sys.excepthook and logs them using loguru.
     """
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
@@ -38,10 +38,11 @@ sys.excepthook = _handle_exception
 
 def configure_console_logger(level: str = "INFO"):
     """
-    Adds a colorized console output sink to loguru.
+    Configures a colorized console logger using loguru.
+
 
     Args:
-        level (str): Logging level (DEBUG, INFO, WARNING, ERROR)
+        level (str): Logging level used for console output.
     """
     logger.add(
         sys.stderr,
